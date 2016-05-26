@@ -33,7 +33,8 @@
             // 
             // GetNewsStories
             // 
-            this.GetNewsStories.Location = new System.Drawing.Point(266, 90);
+            this.GetNewsStories.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.GetNewsStories.Location = new System.Drawing.Point(334, 255);
             this.GetNewsStories.Name = "GetNewsStories";
             this.GetNewsStories.Size = new System.Drawing.Size(449, 46);
             this.GetNewsStories.TabIndex = 0;
