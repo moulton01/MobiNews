@@ -1,0 +1,9 @@
+c:\users\ben\documents\visual studio 2015\Projects\MobiNews\MobiNews\bin\Debug\MobiNews.exe.config
+c:\users\ben\documents\visual studio 2015\Projects\MobiNews\MobiNews\bin\Debug\MobiNews.exe
+c:\users\ben\documents\visual studio 2015\Projects\MobiNews\MobiNews\bin\Debug\MobiNews.pdb
+c:\users\ben\documents\visual studio 2015\Projects\MobiNews\MobiNews\obj\Debug\MobiNews.csprojResolveAssemblyReference.cache
+c:\users\ben\documents\visual studio 2015\Projects\MobiNews\MobiNews\obj\Debug\MobiNews.Properties.Resources.resources
+c:\users\ben\documents\visual studio 2015\Projects\MobiNews\MobiNews\obj\Debug\MobiNews.csproj.GenerateResource.Cache
+c:\users\ben\documents\visual studio 2015\Projects\MobiNews\MobiNews\obj\Debug\MobiNews.exe
+c:\users\ben\documents\visual studio 2015\Projects\MobiNews\MobiNews\obj\Debug\MobiNews.pdb
+c:\users\ben\documents\visual studio 2015\Projects\MobiNews\MobiNews\obj\Debug\MobiNews.NewsStoryImport.resources
