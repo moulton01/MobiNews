@@ -91,64 +91,10 @@ namespace MobiNews
         /// <param name="_newStories">List of new stories</param>
         private void InsertStories(List<NewsStory> _newStories)
         {
-            using (SqlConnection conn = new SqlConnection(@"Data Source=BENS-PC\SQLEXPRESS;
-                Initial Catalog=MobiNews;
-                User id=Default;
-                Password=testing1234"))
+            foreach(var story in _newStories)
             {
-                conn.Open();
-                foreach(var story in _newStories)
-                {
-                    if (!StoryExists(story.SupplierStoryId))
-                    {
-                        SqlCommand insertCommand = new SqlCommand("INSERT INTO NEWSSTORIES (NEWSSTORYID, TITLE, NEWSSTORY, IMAGE, SUPPLIERSTORYID) VALUES (@0, @1, @2, @3, @4)", conn);
-                        insertCommand.Parameters.AddWithValue("@0", GetNextId());
-                        insertCommand.Parameters.AddWithValue("@1", story.Title);
-                        insertCommand.Parameters.AddWithValue("@2", story.StoryText);
-                        insertCommand.Parameters.AddWithValue("@3", story.ImagePath);
-                        insertCommand.Parameters.AddWithValue("@4", story.SupplierStoryId);
-                        insertCommand.ExecuteNonQuery();
-                    }
-                }
+                story.InsertStory(); 
             }
-        }
-        /// <summary>
-        /// Gets the next NewsStoryID (Key to the NewsStories Table).
-        /// </summary>
-        /// <returns>The next increment on NewsStoryID</returns>
-        private int GetNextId()
-        {
-            int Id = 0;
-            using (SqlConnection conn = new SqlConnection(@"Data Source=BENS-PC\SQLEXPRESS;
-                Initial Catalog=MobiNews;
-                User id=Default;
-                Password=testing1234"))
-            {
-                conn.Open();
-                SqlCommand nextIdCommand = new SqlCommand("Select MAX(NEWSSTORYID) as NextID From NEWSSTORIES", conn);
-                var dbId= nextIdCommand.ExecuteScalar();
-                Id = (dbId is DBNull) ? 1 : Convert.ToInt32(dbId); 
-            }
-            return Id; 
-        }
-        /// <summary>
-        /// Method called before any story is inserted to the database, checks whether it already exists. 
-        /// </summary>
-        /// <param name="_supplierStoryId">The Story ID</param>
-        /// <returns>Whether the story exists</returns>
-        private bool StoryExists(int _supplierStoryId)
-        {
-            using (SqlConnection conn = new SqlConnection(@"Data Source=BENS-PC\SQLEXPRESS;
-                Initial Catalog=MobiNews;
-                User id=Default;
-                Password=testing1234"))
-            {
-                conn.Open();
-                SqlCommand storyExistsCommand = new SqlCommand("Select COUNT(*) From NEWSSTORIES", conn);
-                if (Convert.ToInt32(storyExistsCommand.ExecuteScalar()) == 0)
-                    return false;  
-            }
-            return true; 
         }
     }
 }
