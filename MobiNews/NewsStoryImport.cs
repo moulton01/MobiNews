@@ -3,7 +3,6 @@ using System.Windows.Forms;
 using System.Xml;
 using System.IO;
 using System.Collections.Generic;
-using System.Data.SqlClient; 
 namespace MobiNews
 {
     public partial class NewsStoryImport : Form
@@ -19,19 +18,13 @@ namespace MobiNews
         private void RunImport()
         {
             List<NewsStory> newStories = new List<NewsStory>(); 
-            try
-            {
-                // Add any new news suppliers here
-                newStories.AddRange(NewsTodayImport());
-                newStories.AddRange(TechMediaNewsImport());
-  
-                InsertStories(newStories);
-                MessageBox.Show("Import Finished with no errors."); 
-            }
-            catch(Exception e)
-            {
-                MessageBox.Show(String.Format("The following error occured when importing new stories: {0} {1}", Environment.NewLine, e.Message));
-            }
+            // Add any new news suppliers here
+            newStories.AddRange(NewsTodayImport());
+            newStories.AddRange(TechMediaNewsImport());
+            // Insert all new stories found
+            InsertStories(newStories);
+            // Alert user import has finished successfully.
+            MessageBox.Show("Import Finished."); 
         }
         /// <summary>
         /// Handles imports for NewsToday supplier
@@ -41,46 +34,57 @@ namespace MobiNews
         {
             List<NewsStory> stories = new List<NewsStory>();
             XmlDocument doc = new XmlDocument();
-            doc.Load("http://www.example.com/xml/");
-            XmlElement root = doc.DocumentElement;
-            XmlNodeList newStories = root.SelectNodes("/publishing/stories/story/");
-            foreach (XmlNode story in newStories)
+            try
             {
-                NewsStory storyToAdd = new NewsStory
-                {
-                    SupplierStoryId = Convert.ToInt32(story["id"].InnerText),
-                    Title = story["topTitle"].InnerText,
-                    StoryText = story["body"].InnerText,
-                    ImagePath = story["imageloc"].InnerText
-                };
-                stories.Add(storyToAdd);
-            }
-            return stories; 
-        }
-        /// <summary>
-        /// Handes imports for TechMedia supplier
-        /// </summary>
-        /// <returns>List of new stories</returns>
-        private List<NewsStory> TechMediaNewsImport()
-        {
-            List<NewsStory> stories = new List<NewsStory>(); 
-            var xmlFiles = Directory.GetFiles("c:\\news\\", "*.xml");
-            foreach (var file in xmlFiles)
-            {
-                XmlDocument doc = new XmlDocument();
-                doc.Load(file);
-                XmlNodeList newStories = doc.SelectNodes("/NewsStory");
+                doc.Load("http://www.example.com/xml/");
+                XmlElement root = doc.DocumentElement;
+                XmlNodeList newStories = root.SelectNodes("/publishing/stories/story/");
                 foreach (XmlNode story in newStories)
                 {
                     NewsStory storyToAdd = new NewsStory
                     {
                         SupplierStoryId = Convert.ToInt32(story["id"].InnerText),
                         Title = story["topTitle"].InnerText,
-                        StoryText = story["body"].InnerText, 
+                        StoryText = story["body"].InnerText,
                         ImagePath = story["imageloc"].InnerText
                     };
-                    stories.Add(storyToAdd); 
+                    stories.Add(storyToAdd);
                 }
+            }
+            catch(Exception e)
+            {
+                MessageBox.Show(String.Format("The Imports for NewsToday did not complete successfully. The following error occurred:{0}{1}", Environment.NewLine, e.Message));
+            }
+            return stories; 
+        }
+        /// <summary>
+        /// Handles imports for TechMedia supplier, should only come one at a time. 
+        /// </summary>
+        /// <returns>List of new stories</returns>
+        private List<NewsStory> TechMediaNewsImport()
+        {
+            List<NewsStory> stories = new List<NewsStory>();
+            try
+            {
+                var xmlFiles = Directory.GetFiles("c:\\news\\", "*.xml");
+                foreach (var file in xmlFiles)
+                {
+                    XmlDocument doc = new XmlDocument();
+                    doc.Load(file);
+                    XmlNode story = doc.SelectSingleNode("/NewsStory");
+                    NewsStory storyToAdd = new NewsStory
+                    {
+                        SupplierStoryId = Convert.ToInt32(story["id"].InnerText),
+                        Title = story["topTitle"].InnerText,
+                        StoryText = story["body"].InnerText,
+                        ImagePath = story["imageloc"].InnerText
+                    };
+                    stories.Add(storyToAdd);
+                }
+            }
+            catch(Exception e)
+            {
+                MessageBox.Show(String.Format("The Imports for TechMediaNews did not complete successfully. The following error occurred:{0}{1}", Environment.NewLine, e.Message));
             }
             return stories;  
         }
